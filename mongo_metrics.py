@@ -9,7 +9,7 @@ class MongoMetrics :
         self.client = MongoClient(mongo_uri)
 
 
-    def retrieve_user_metrics(self, database='ConversationData'):
+    def retrieve_user_metrics(self, database='ConversationData', days=30):
         db = self.client[database]
 
         user_list = self.retrieve_user_list(db)
@@ -26,7 +26,7 @@ class MongoMetrics :
             assistant_loc_count = 0
             assistant_sentence_count = 0
             for convo in convo_list:
-                if self.is_document_within_past_days(convo, 30):
+                if self.is_document_within_past_days(convo, days):
                     user_prompt_count += self.retrieve_user_message_count(convo)
                     convo_loc, convo_sentences = self.retrieve_assistant_data(convo)
                     assistant_loc_count += convo_loc
