@@ -31,7 +31,7 @@ class MongoMetrics :
                     convo_loc, convo_sentences = self.retrieve_assistant_data(convo)
                     assistant_loc_count += convo_loc
                     assistant_sentence_count += convo_sentences
-
+            
             # Store Required Metrics Before Writing
             user_convo_details[user] = {}
             user_convo_details[user]['Conversation Count'] = collection.count_documents({})
@@ -75,17 +75,19 @@ class MongoMetrics :
     
 
     def count_lines_from_text(self, text, marker='```'):
-            loc = 0
-            sentences = 0
-            in_code_block = False
-            for line in text.split('\n'):
-                if marker in line:
-                    in_code_block = not in_code_block
-                elif in_code_block:
-                    loc += 1
-                elif not in_code_block:
-                    sentences += 1
-            return (loc, sentences)
+        loc = 0
+        sentences = 0
+        in_code_block = False
+
+        for line in text.split('\n'):
+            if marker in line:
+                in_code_block = not in_code_block
+            elif in_code_block:
+                loc += 1
+            else:
+                sentences += 1
+                
+        return loc, sentences
 
 
     def retrieve_user_list(self, db):
